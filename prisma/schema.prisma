@@ -27,12 +27,25 @@ model User {
 }
 
 model Conversation {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  User      User?    @relation(fields: [userId], references: [id])
-  userId    Int?
-  messages  String[]
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  User      User?     @relation(fields: [userId], references: [id])
+  userId    Int
+  name      String?
+  messages  Message[]
 }
- 
- 
+
+model Message {
+  id           Int           @id @default(autoincrement())
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  Conversation Conversation? @relation(fields: [convId], references: [id])
+  convId       Int
+  role         String
+  message      String
+  like         Boolean?
+  dislike      Boolean?
+  register     Boolean?
+  favorite     Boolean?
+}
