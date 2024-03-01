@@ -6,6 +6,8 @@ import { useChat } from 'ai/react';
 import UserMessage from "@/components/userMessage";
 import ChaGPTmessage from "@/components/chatGPTMessage";
 import Navbar from "@/components/navbar";
+import { Textarea } from "@nextui-org/react";
+import { SunIcon } from "@heroicons/react/20/solid";
 export default function Home() {
 
   // console.log('---', session?.user)
@@ -17,79 +19,59 @@ export default function Home() {
 
 
   return (
-    <div className="w-full flex flex-col items-cente">
-      <div className="w-full flex  justify-center">
-        <div className="max-w-[1000px] w-full py-24  space-y-16 ">
-          {messages.map((message, index) => (
-            message.role === 'user' ?
-              <UserMessage key={index} message={message.content} />
-              :
-              <ChaGPTmessage key={index} message={message.content} />
-          ))}
-        </div>
-      </div>
-      <div className="fixed  bottom-0 w-full bg-white">
-        <form onSubmit={handleSubmit} className="flex-none p-6  bg-slate-300">
-          <div className="flex rounded-lg border border-gray-700 bg-gray-800">
-            <input
-
-              value={input}
-              placeholder="Say something..."
-              onChange={handleInputChange}
-              type="text"
-              className="flex-grow px-4 py-2 bg-transparent text-white focus:outline-none"
-            />
-            <button type="submit" className="bg-purple-500 rounded-lg px-4 py-2 text-white font-semibold focus:outline-none hover:bg-purple-600 transition-colors duration-300">Send</button>
+    <div className="w-full h-screen flex flex-col items-cente p-5">
+      <div className=" relative   bg-white h-full rounded-xl pb-[170px] ">
+        <div className="w-full flex h-full   justify-center overflow-x-hidden hideScroll ">
+          <div className="max-w-[1000px] w-full py-24  space-y-16 ">
+            {messages.map((message, index) => (
+              message.role === 'user' ?
+                <UserMessage key={index} message={message.content} />
+                :
+                <ChaGPTmessage key={index} message={message.content} />
+            ))}
           </div>
-        </form>
+        </div>
+        <div className=" absolute   right-0 bottom-0 w-full   rounded-xl  ">
+          <div className="px-4 pb-4">
+            <div className="w-full bg-slate-200 h-10 rounded-t-xl  border-2 border-b-0 border-slate-200 "></div>
+            <form onSubmit={handleSubmit} className="  flex-none p-1  bg-white rounded-b-xl border-2 border-t-0 border-slate-200"
+            >
+              <div className=" relative flex rounded-lg pl-10 ">
+                <SunIcon className="w-8 absolute top-2 left-2 cursor-pointer hover:bg-slate-200  rounded-xl " />
+                <Textarea
+                  style={{ outline: 'none' }}
+                  value={input}
+                  placeholder="Say something..."
+                  onChange={handleInputChange}
+                  className=" focus:outline-none  flex-grow px-2  bg-transparent text-black   w-full "
+                />
+                <div className=" px-4 py-2 flex justify-center items-center">
+                  <button className="p-2 bg-slate-200 rounded-lg hover:bg-slate-300 ">
+                    <SunIcon width={40} height={40} className="  rounded-xl " />
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
     </div >
 
 
   );
 }
+// import React from 'react';
 
-// export default async function Home() {
-//   // const [a, aa] = useState('')
-//   const session = await getServerSession(authOptions)
-//   console.log('---', session?.user)
+// const Page = () => {
 //   return (
-//     <>
-//       {session ? (<div  >
-//         <div className="">email:{session.user?.email}</div>
-//         <div className=""> firstName:{session.user?.firstName}</div>
-//         <div className=""> lastName:{session.user?.lastName}</div>
-//         <div className=""> id:{session.user?.id}</div>
-//       </div>
-//       ) : (
-//         <h1 className="text-5xl">You Shall Not Pass00!</h1>
-//       )}
-//     </>
-//   )
-// }
-// 'use client';
-
-// import { useChat } from 'ai/react';
-
-// export default function Chat() {
-//   const { messages, input, handleInputChange, handleSubmit } = useChat();
-//   return (
-//     <div className="flex flex-col w-full max-w-md py-24 mx-auto stretch">
-//       {messages.map(m => (
-//         <div key={m.id} className="whitespace-pre-wrap">
-//           {m.role === 'user' ? 'User: ' : 'AI: '}
-//           {m.content}
-//         </div>
-//       ))}
-
-//       <form onSubmit={handleSubmit}>
-//         <input
-//           className="fixed bottom-0 w-full max-w-md p-2 mb-8 border border-gray-300 rounded shadow-xl"
-//           value={input}
-//           placeholder="Say something..."
-//           onChange={handleInputChange}
-//         />
-//       </form>
+//     <div>
+//       <textarea
+//         placeholder="Say something..."
+//         className="text-white flex-grow px-4 py-2 bg-transparent w-full h-[200px] outline-none resize-none" // Use CSS to control the appearance
+//         style={{ overflowWrap: 'break-word', wordWrap: 'break-word' }} // Additional style for text wrapping
+//       />
 //     </div>
 //   );
-// }
+// };
+
+// export default Page;

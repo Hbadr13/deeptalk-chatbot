@@ -14,3 +14,4 @@ const Provider = ({ children }: ProviderProps) => {
 }
 
 export default Provider
+

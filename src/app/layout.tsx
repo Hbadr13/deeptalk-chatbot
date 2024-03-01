@@ -6,8 +6,10 @@ import Provider from "@/components/provider";
 import { useSession } from "next-auth/react";
 import LogOut from "@/components/navbar";
 import Navbar from "@/components/navbar";
+import Sidebar from "@/components/sidebar";
+import SidebarStatus from "@/components/sidebarStatus";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['greek'] });
 
 // export const metadata: Metadata = {
 //   title: "Create Next App",
@@ -21,12 +23,14 @@ export default function RootLayout({
 }>) {
 
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <Provider>
-          <Navbar />
-
-          {children}
+    <html lang="en" >
+      <body className={inter.className + ' bg-[#0f1e46] '}>
+        <Provider >
+          <div className="flex  ">
+            <Sidebar />
+            <SidebarStatus />
+            {children}
+          </div>
         </Provider>
       </body>
     </html>
