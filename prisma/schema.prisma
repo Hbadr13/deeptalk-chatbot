@@ -34,3 +34,5 @@ model Conversation {
   userId    Int?
   messages  String[]
 }
+ 
+ 
