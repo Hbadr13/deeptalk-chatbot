@@ -49,7 +49,7 @@ export const authOptions: AuthOptions = {
                 const secretKay = process.env.JWE_SECRET_KY
                 if (!secretKay)
                     return null;
-                const accessToken = jwt.sign(currentUser, secretKay, { expiresIn: '1h' });
+                const accessToken = jwt.sign(currentUser, secretKay, { expiresIn: '1d' });
                 console.log('accessToken->', accessToken)
                 // const accessToken = signJwtToken(user, { expiresIn: '61', })
 
@@ -65,41 +65,41 @@ export const authOptions: AuthOptions = {
     //     signOut: '/auth/signout',
     //     error: 'error'
     // },
-    // secret: process.env.JWE_SECRET_KY,
-    // jwt: {
-    //     maxAge: 60 * 60 * 24 * 1,
-    //     async encode({ secret, token }) {
-    //         // console.log('---------1-------')
-    //         // console.log('serect:', secret)
-    //         // console.log('token:', token)
-    //         if (!token) {
-    //             throw new Error('No token to encode');
-    //         }
-    //         return jwt.sign(token, secret);
-    //     },
-    //     async decode({ secret, token }) {
-    //         // console.log('---------2-------')
-    //         // console.log('serect:', secret)
-    //         // console.log('token:', token)
-    //         if (!token) {
-    //             throw new Error('No token to decode');
-    //         }
-    //         const decodedToken = jwt.verify(token, secret);
-    //         // .log('-->', decodedToken)
-    //         if (typeof decodedToken === 'string') {
-    //             // console.log('-----------1')
-    //             return JSON.parse(decodedToken);
-    //         } else {
-    //             // console.log('-----------2')
-    //             return decodedToken;
-    //         }
-    //     }
-    // },
-    // session: {
-    //     strategy: 'jwt',
-    //     maxAge: 30 * 24 * 60 * 60,
-    //     updateAge: 24 * 60 * 60,
-    // },
+    secret: process.env.JWE_SECRET_KY, 
+    jwt: {
+        maxAge: 60 * 60 * 24 * 1,
+        async encode({ secret, token }) {
+            // console.log('---------1-------')
+            // console.log('serect:', secret)
+            // console.log('token:', token)
+            if (!token) {
+                throw new Error('No token to encode');
+            }
+            return jwt.sign(token, secret);
+        },
+        async decode({ secret, token }) {
+            // console.log('---------2-------')
+            // console.log('serect:', secret)
+            // console.log('token:', token)
+            if (!token) {   
+                throw new Error('No token to decode');
+            }   
+            const decodedToken = jwt.verify(token, secret);
+            // .log('-->', decodedToken)
+            if (typeof decodedToken === 'string') {
+                // console.log('-----------1')
+                return JSON.parse(decodedToken);
+            } else {
+                // console.log('-----------2')
+                return decodedToken;
+            }   
+        }  
+    },
+    session: {
+        strategy: 'jwt',
+        maxAge: 60 * 60 * 24,
+        updateAge: 60 * 60
+    },
     callbacks: {
         async session({ token, session }) {
             // console.log('decodedToken', decodedToken)

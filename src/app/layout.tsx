@@ -24,13 +24,15 @@ export default function RootLayout({
 
   return (
     <html lang="en" >
-      <body className={inter.className + ' bg-[#0f1e46] '}>
+      <body className={inter.className}>
         <Provider >
-          <div className="flex  ">
+          {/* <div className="flex  "> */}
+          {/* <Navbar />
             <Sidebar />
-            <SidebarStatus />
-            {children}
-          </div>
+            <SidebarStatus /> */}
+          <Navbar />
+          {children}
+          {/* </div> */}
         </Provider>
       </body>
     </html>

@@ -18,20 +18,9 @@ export default function Navbar({ params }: any) {
         return <div></div>;
     }
     if (status === 'loading') {
-        return <div>Loading...</div>;
+        return <div></div>;
     }
     return (
-        <div>
-            {session ? (
-                <div>
-                    {/* <p>Email: {session}</p> */}
-                    <p>Email: {session?.user?.phoneNumber}</p>
-                    <p>id: {session?.user?.id}</p>
-                    <button className='px-4 py-2  bg-red-300' onClick={() => signOut({ callbackUrl: '/auth/signin' })}>log out</button>
-                </div>
-            ) : (
-                <p>No user logged in.</p>
-            )}
-        </div>
+        <></>
     );
 }
