@@ -1,6 +1,6 @@
 export function getTheTime(createdAtDate: any) {
     const currentDate = new Date();
-    currentDate.setHours(currentDate.getHours() + 1);
+    // currentDate.setHours(currentDate.getHours() + 1);
     const timeDifference = currentDate.getTime() - (new Date(createdAtDate)).getTime();
     const secondsDifference = Math.floor(timeDifference / 1000);
     const intervals = [
