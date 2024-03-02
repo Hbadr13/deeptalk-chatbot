@@ -10,9 +10,7 @@ export default function Home() {
     <div className="flex bg-[#0f1e46]  ">
       <Sidebar option={option} setOption={setOption} />
       <SidebarStatus option={option} idOfSelectedConv={idOfSelectedConv} setIdOfSelectedConv={setIdOfSelectedConv} />
-      <Main />
+      <Main idOfSelectedConv={idOfSelectedConv} />
     </div >
-
-
   );
 }

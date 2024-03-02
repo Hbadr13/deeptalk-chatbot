@@ -29,10 +29,11 @@ export async function POST(request: Request, contax: any) {
     // const id = ctx.params.id
     const payload = verifyToken({ authorization: request.headers.get('authorization'), secretKay: process.env.JWE_SECRET_KY })
     if (!payload || !contax.params.id)
-        return new Response(JSON.stringify({ error: "Bad Request" }), { status: 400 })
+        return new Response(JSON.stringify({ error: "unauthorized" }), { status: 401 })
 
     const body = await request.json();
     const conversationId = Number(contax.params.id)
+
     const message = body.message
     const role = body.role
     const conversation = await prisma.conversation.findUnique({ where: { id: conversationId } })

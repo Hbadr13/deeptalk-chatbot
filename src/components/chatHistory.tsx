@@ -32,7 +32,9 @@ const ChatHistory = ({ idOfSelectedConv, setIdOfSelectedConv }: ChatHistoryProps
             async () => {
                 if (session.data?.user) {
                     const res = await getAllConversation({ accessToken: session.data?.user.accessToken })
-                    const data = await res.json()
+                    const data: any[] = await res.json()
+                    if (data.length)
+                        setIdOfSelectedConv(data[0].id)
                     setConversations(data)
                 }
             }
@@ -52,6 +54,8 @@ const ChatHistory = ({ idOfSelectedConv, setIdOfSelectedConv }: ChatHistoryProps
         })
         const res2 = await getAllConversation({ accessToken: session.data?.user.accessToken })
         const data = await res2.json()
+        // if (data.length)
+        //     setIdOfSelectedConv(data[0].id)
         setConversations(data)
     }
     const handelDeleteConvesation = async (convid: number) => {
@@ -62,10 +66,13 @@ const ChatHistory = ({ idOfSelectedConv, setIdOfSelectedConv }: ChatHistoryProps
                 "Authorization": `Bearer ${session.data.user.accessToken}`
             },
             method: "DELETE",
-
         })
         const res2 = await getAllConversation({ accessToken: session.data?.user.accessToken })
         const data = await res2.json()
+        if (data.length) {
+            if (convid == idOfSelectedConv)
+                setIdOfSelectedConv(data[0].id)
+        }
         setConversations(data)
     }
     if (session.status == 'loading')
@@ -74,7 +81,6 @@ const ChatHistory = ({ idOfSelectedConv, setIdOfSelectedConv }: ChatHistoryProps
                 <div className=" relative h-full bg-[#f8f8f8] rounded-xl"></div>
             </div>
         )
-    const x = <Navbar />
     return (
         <div className=' relative h-screen p-5 w-[50%] '>
             <div className=" relative h-full bg-[#f8f8f8] rounded-xl overflow-y-scroll overflow-x-hidden hideScroll">

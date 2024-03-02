@@ -12,7 +12,6 @@ const client = new OpenAIClient(
 export const runtime = 'edge';
 
 export async function POST(req: Request) {
-    console.log('helloooo==1234====\n\n')
     const { messages } = await req.json();
 
     // Ask Azure OpenAI for a streaming chat completion given the prompt
@@ -20,10 +19,6 @@ export async function POST(req: Request) {
         'gpt432',
         messages,
     );
-
-
-    // Convert the response into a friendly text-stream
     const stream = OpenAIStream(response);
-    // Respond with the stream
     return new StreamingTextResponse(stream);
 }
