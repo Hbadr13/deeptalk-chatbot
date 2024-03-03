@@ -5,13 +5,20 @@ import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 export default function Navbar({ params }: any) {
-    
+
     const { data: session, status } = useSession();
+
+    // const { status } = useSession({
+    //     required: true,
+    //     onUnauthenticated() {
+    //         // The user is not authenticated, handle it here.
+    //     },
+    // })
+    
     const router = useRouter()
     const pathName = usePathname()
 
     useEffect(() => {
-        console.log('--->', status)
         if (status === 'unauthenticated' && pathName != '/auth/signup') {
             router.push('/auth/signin');
         }

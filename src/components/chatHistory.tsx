@@ -2,12 +2,13 @@ import { EyeIcon } from '@heroicons/react/16/solid'
 import { KeyIcon } from '@heroicons/react/24/solid'
 import React, { useEffect, useState } from 'react'
 // import { Conversation } from '@prisma/client'
-import { useSession } from 'next-auth/react'
+import { getSession, useSession } from 'next-auth/react'
 import { Conversation } from '@prisma/client'
 import { getTheTime } from '@/lib/time'
 import Image from 'next/image'
 import Navbar from './navbar'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+import { Session } from 'next-auth'
 export interface ChatHistoryProps {
     idOfSelectedConv: number,
     setIdOfSelectedConv: (idOfSelectedConv: number) => void
@@ -26,49 +27,64 @@ const getAllConversation = async ({ accessToken }: { accessToken: string }) => {
 const ChatHistory = ({ idOfSelectedConv, setIdOfSelectedConv }: ChatHistoryProps) => {
 
     const [conversations, setConversations] = useState<Conversation[]>([])
-    const session = useSession()
+    // const session = useSession()
+    const [session, setSession] = useState<Session | null>()
+    useEffect(() => {
+        (
+            async () => {
+                const session = await getSession()
+                if (session)
+                    setSession(session)
+            }
+        )()
+    }, [])
+    const pathname = usePathname()
+    useEffect(() => {
+        console.log('route=>', pathname.split('/')[2])
+        setIdOfSelectedConv(Number(pathname.split('/')[2]))
+    }, [pathname])
     const router = useRouter()
     useEffect(() => {
         (
             async () => {
-                if (session.data?.user) {
-                    const res = await getAllConversation({ accessToken: session.data?.user.accessToken })
+                if (session) {
+                    const res = await getAllConversation({ accessToken: session.user.accessToken })
                     const data: any[] = await res.json()
-                    if (data.length)
-                        setIdOfSelectedConv(data[0].id)
+                    // if (data.length)
+                    //     setIdOfSelectedConv(data[0].id)
                     setConversations(data)
                 }
             }
         )()
     }, [session])
     const handelCreatNewGroup = async () => {
-        if (!session.data?.user)
+        if (!session)
             return
         const res = await fetch(`http://localhost:3000/api/conversations`, {
             headers: {
-                "Authorization": `Bearer ${session.data.user.accessToken}`
+                "Authorization": `Bearer ${session.user.accessToken}`
             },
             method: "POST",
             body: JSON.stringify({
                 name: ""
             })
         })
-        const res2 = await getAllConversation({ accessToken: session.data?.user.accessToken })
+        const res2 = await getAllConversation({ accessToken: session.user.accessToken })
         const data = await res2.json()
         // if (data.length)
         //     setIdOfSelectedConv(data[0].id)
         setConversations(data)
     }
     const handelDeleteConvesation = async (convid: number) => {
-        if (!session.data?.user || !convid)
+        if (!session || !convid)
             return
         const res = await fetch(`http://localhost:3000/api/conversations/${convid}`, {
             headers: {
-                "Authorization": `Bearer ${session.data.user.accessToken}`
+                "Authorization": `Bearer ${session.user.accessToken}`
             },
             method: "DELETE",
         })
-        const res2 = await getAllConversation({ accessToken: session.data?.user.accessToken })
+        const res2 = await getAllConversation({ accessToken: session.user.accessToken })
         const data = await res2.json()
         if (data.length) {
             if (convid == idOfSelectedConv)
@@ -76,7 +92,7 @@ const ChatHistory = ({ idOfSelectedConv, setIdOfSelectedConv }: ChatHistoryProps
         }
         setConversations(data)
     }
-    if (session.status == 'loading')
+    if (!session)
         return (
             <div className='h-screen p-5 w-[50%] '>
                 <div className=" relative h-full bg-[#f8f8f8] rounded-xl"></div>

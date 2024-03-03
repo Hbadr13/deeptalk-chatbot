@@ -8,7 +8,6 @@ export default function Home() {
   const [option, setOption] = useState('chat')
   return (
     <div className="flex  ">
-      hello
       {/* <Sidebar option={option} setOption={setOption} /> */}
       {/* <SidebarStatus option={option} idOfSelectedConv={idOfSelectedConv} setIdOfSelectedConv={setIdOfSelectedConv} /> */}
       {/* <Main idOfSelectedConv={idOfSelectedConv} /> */}
