@@ -1,7 +1,8 @@
 import React from 'react'
 import Image from 'next/image'
-import { ChartBarIcon } from '@heroicons/react/20/solid'
 import { signOut, useSession } from 'next-auth/react'
+import { usePathname, useRouter } from 'next/navigation'
+
 export interface SidebarProps {
     option: string
     setOption: (option: string) => void
@@ -9,13 +10,20 @@ export interface SidebarProps {
 
 
 const navigations = [
-    { label: 'chat', name: "Chat Generator", icon: '/conversation.svg', width: 20, height: 20 },
-    { label: 'saved_Q', name: "Saved Questions", icon: '/icon _Saved_.svg', width: 15, height: 15 },
-    { label: 'saved_R', name: "Saved Responses", icon: '/icon _Saved_.svg', width: 15, height: 15 },
-    { label: 'favorite', name: "Favorite", icon: '/icon _heart_.svg', width: 20, height: 20 },
+    { label: 'chat', name: "Chat Generator", icon: '/conversation.svg', width: 20, height: 20, link: '/' },
+    { label: 'saved_Q', name: "Saved Questions", icon: '/icon _Saved_.svg', width: 15, height: 15, link: '/savedquestion' },
+    { label: 'saved_R', name: "Saved Responses", icon: '/icon _Saved_.svg', width: 15, height: 15, link: '/savedresponses' },
+    { label: 'favorite', name: "Favorite", icon: '/icon _heart_.svg', width: 20, height: 20, link: '/favorite' },
 ]
+
 const Sidebar = ({ option, setOption }: SidebarProps) => {
+
+    const router = useRouter()
     const session = useSession()
+    const pathname = usePathname()
+
+    if (pathname == '/auth/signin/' || pathname == '/auth/signup/')
+        return <></>
     if (session.status == 'loading')
         return (
             <div className='relative p-3 flex flex-col space-y-6 w-[25%]    h-screen '>
@@ -38,7 +46,10 @@ const Sidebar = ({ option, setOption }: SidebarProps) => {
                 (
                     <button
                         key={index}
-                        onClick={() => setOption(nav.label)}
+                        onClick={() => {
+                            setOption(nav.label)
+                            router.push(nav.link)
+                        }}
                         className={`${nav.label == option ? 'bg-[#f08d86]' : ''} py-4 px-6  flex  rounded-lg space-x-3`}>
                         <Image src={nav.icon} alt='deepleaf' width={nav.width} height={nav.height} className='' />
                         <div className={`${nav.label != option ? 'text-[#ffffff]' : ''} text-[#0f1e46] `}>

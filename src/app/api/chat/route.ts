@@ -10,15 +10,69 @@ const client = new OpenAIClient(
 
 // IMPORTANT! Set the runtime to edge
 export const runtime = 'edge';
-
+import prisma from '@/lib/prisma';
 export async function POST(req: Request) {
-    const { messages } = await req.json();
+    const { messages, conversationId, userid, accessToken } = await req.json();
 
     // Ask Azure OpenAI for a streaming chat completion given the prompt
     const response = await client.streamChatCompletions(
         'gpt432',
         messages,
     );
-    const stream = OpenAIStream(response);
+    const stream = OpenAIStream(response, {
+        onCompletion: async (completion: string) => {
+
+            console.log('conversationId', conversationId)
+            console.log('lastmsg', messages[messages.length - 1].content,)
+            console.log('response', completion)
+            console.log('userid', userid)
+
+            await fetch(`http://localhost:3000/api/conversations/${conversationId}`, {
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`
+                },
+                method: "POST",
+                body: JSON.stringify({
+                    "message": messages[messages.length - 1].content,
+                    "role": "user"
+                })
+            })
+            const res2 = await fetch(`http://localhost:3000/api/conversations/${conversationId}`, {
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`
+                },
+                method: "POST",
+                body: JSON.stringify({
+                    "message": completion,
+                    "role": "assistant"
+                })
+            })
+
+            // await prisma.message.create({
+            //     data: {
+            //         userId: userid,
+            //         convId: conversationId,
+            //         message: messages[messages.length - 1].content,
+            //         role: 'user',
+            //         like: false,
+            //         dislike: false,
+            //         favorite: false,
+            //         register: false
+            //     }
+            // })
+            // await prisma.message.create({
+            //     data: {
+            //         userId: userid,
+            //         convId: conversationId,
+            //         message: completion,
+            //         role: 'assistant',
+            //         like: false,
+            //         dislike: false,
+            //         favorite: false,
+            //         register: false
+            //     }
+            // })
+        },
+    });
     return new StreamingTextResponse(stream);
 }

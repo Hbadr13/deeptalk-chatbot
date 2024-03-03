@@ -1,18 +1,14 @@
-import { EyeIcon } from '@heroicons/react/16/solid'
+'use client'
+
 import { KeyIcon } from '@heroicons/react/24/solid'
 import React, { useEffect, useState } from 'react'
-// import { Conversation } from '@prisma/client'
 import { getSession, useSession } from 'next-auth/react'
 import { Conversation } from '@prisma/client'
 import { getTheTime } from '@/lib/time'
 import Image from 'next/image'
-import Navbar from './navbar'
 import { usePathname, useRouter } from 'next/navigation'
 import { Session } from 'next-auth'
-export interface ChatHistoryProps {
-    idOfSelectedConv: number,
-    setIdOfSelectedConv: (idOfSelectedConv: number) => void
-}
+
 
 const getAllConversation = async ({ accessToken }: { accessToken: string }) => {
     const res = await fetch(`http://localhost:3000/api/conversations`, {
@@ -24,11 +20,14 @@ const getAllConversation = async ({ accessToken }: { accessToken: string }) => {
     return res
 }
 
-const ChatHistory = ({ idOfSelectedConv, setIdOfSelectedConv }: ChatHistoryProps) => {
-
+const ChatHistory = () => {
+    const [idOfSelectedConv, setIdOfSelectedConv] = useState(0)
     const [conversations, setConversations] = useState<Conversation[]>([])
-    // const session = useSession()
     const [session, setSession] = useState<Session | null>()
+    const pathname = usePathname()
+    const router = useRouter()
+
+
     useEffect(() => {
         (
             async () => {
@@ -38,60 +37,83 @@ const ChatHistory = ({ idOfSelectedConv, setIdOfSelectedConv }: ChatHistoryProps
             }
         )()
     }, [])
-    const pathname = usePathname()
+
     useEffect(() => {
-        console.log('route=>', pathname.split('/')[2])
         setIdOfSelectedConv(Number(pathname.split('/')[2]))
     }, [pathname])
-    const router = useRouter()
+
     useEffect(() => {
         (
             async () => {
                 if (session) {
-                    const res = await getAllConversation({ accessToken: session.user.accessToken })
-                    const data: any[] = await res.json()
-                    // if (data.length)
-                    //     setIdOfSelectedConv(data[0].id)
-                    setConversations(data)
+                    try {
+
+                        const res = await getAllConversation({ accessToken: session.user.accessToken })
+
+                        if (res.status == 201) {
+                            const data: any[] = await res.json()
+                            setConversations(data)
+                        }
+                    } catch (error) {
+
+                    }
                 }
             }
         )()
     }, [session])
+
     const handelCreatNewGroup = async () => {
-        if (!session)
-            return
-        const res = await fetch(`http://localhost:3000/api/conversations`, {
-            headers: {
-                "Authorization": `Bearer ${session.user.accessToken}`
-            },
-            method: "POST",
-            body: JSON.stringify({
-                name: ""
+        try {
+            if (!session)
+                return
+            const res = await fetch(`http://localhost:3000/api/conversations`, {
+                headers: {
+                    "Authorization": `Bearer ${session.user.accessToken}`
+                },
+                method: "POST",
+                body: JSON.stringify({
+                    name: ""
+                })
             })
-        })
-        const res2 = await getAllConversation({ accessToken: session.user.accessToken })
-        const data = await res2.json()
-        // if (data.length)
-        //     setIdOfSelectedConv(data[0].id)
-        setConversations(data)
+            if (res.ok) {
+                const res2 = await getAllConversation({ accessToken: session.user.accessToken })
+                if (res2.ok) {
+                    const data = await res2.json()
+                    setConversations(data)
+                }
+            }
+        } catch (error) {
+
+        }
     }
     const handelDeleteConvesation = async (convid: number) => {
-        if (!session || !convid)
-            return
-        const res = await fetch(`http://localhost:3000/api/conversations/${convid}`, {
-            headers: {
-                "Authorization": `Bearer ${session.user.accessToken}`
-            },
-            method: "DELETE",
-        })
-        const res2 = await getAllConversation({ accessToken: session.user.accessToken })
-        const data = await res2.json()
-        if (data.length) {
-            if (convid == idOfSelectedConv)
-                setIdOfSelectedConv(data[0].id)
+        try {
+
+            if (!session || !convid)
+                return
+            const res = await fetch(`http://localhost:3000/api/conversations/${convid}`, {
+                headers: {
+                    "Authorization": `Bearer ${session.user.accessToken}`
+                },
+                method: "DELETE",
+            })
+            if (res.ok) {
+                const res2 = await getAllConversation({ accessToken: session.user.accessToken })
+                if (res2.ok) {
+                    const data = await res2.json()
+                    if (data.length && convid == idOfSelectedConv) {
+                        router.push(`/conv/${data[0].id}`)
+                    }
+                    else if (!data.length)
+                        router.push(`/`)
+                    setConversations(data)
+                }
+            }
+        } catch (error) {
+
         }
-        setConversations(data)
     }
+
     if (!session)
         return (
             <div className='h-screen p-5 w-[50%] '>

@@ -1,18 +1,18 @@
 import { User } from "@prisma/client";
 
-interface User1 extends User {
+interface UserInfo extends User {
   accessToken: string;
 }
 
 declare module "next-auth" {
   interface Session {
-    user: User1;
+    user: UserInfo;
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
-    user: User1;
+    user: UserInfo;
   }
 }
 

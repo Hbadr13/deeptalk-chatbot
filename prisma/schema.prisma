@@ -24,6 +24,7 @@ model User {
   birthdate     String
   lastName      String?
   conversations Conversation[]
+  Message       Message[]
 }
 
 model Conversation {
@@ -48,4 +49,7 @@ model Message {
   dislike      Boolean?
   register     Boolean?
   favorite     Boolean?
+
+  User   User @relation(fields: [userId], references: [id])
+  userId Int
 }

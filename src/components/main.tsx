@@ -1,56 +1,24 @@
 'use client'
+
 import React, { useEffect, useRef } from 'react'
-import { getServerSession } from "next-auth/next"
 import { useState } from "react"
 import { useChat } from 'ai/react';
 import UserMessage from "@/components/userMessage";
 import ChaGPTmessage from "@/components/chatGPTMessage";
-import Navbar from "@/components/navbar";
 import { Textarea } from "@nextui-org/react";
-import { SunIcon } from "@heroicons/react/20/solid";
 import Image from "next/image";
 import { Message } from 'ai';
-import { getSession, useSession } from 'next-auth/react';
+import { getSession } from 'next-auth/react';
 import { Session } from 'next-auth';
+
+
 const MainComponent = ({ conversationId }: { conversationId: number }) => {
-  const [session, setSession] = useState<Session | null>()
-  useEffect(() => {
-    (
-      async () => {
-        const session = await getSession()
-        if (session)
-          setSession(session)
-      }
-    )()
-  }, [])
 
   const [initialMessages, setinitialMessages] = useState<Message[]>([])
-  const handelOnFinish = async (message: Message) => {
-    // console.log('user:', input)
-    // console.log('ai:', message.content)
-    if (!session)
-      return
-    const res1 = await fetch(`http://localhost:3000/api/conversations/${conversationId}`, {
-      headers: {
-        "Authorization": `Bearer ${session.user.accessToken}`
-      },
-      method: "POST",
-      body: JSON.stringify({
-        "message": input,
-        "role": "user"
-      })
-    })
-    const res2 = await fetch(`http://localhost:3000/api/conversations/${conversationId}`, {
-      headers: {
-        "Authorization": `Bearer ${session.user.accessToken}`
-      },
-      method: "POST",
-      body: JSON.stringify({
-        "message": message.content,
-        "role": "assistant"
-      })
-    })
-  }
+  const [session, setSession] = useState<Session | null>()
+  const chatEndElementRef = useRef<any>(null);
+
+
   useEffect(() => {
     (
       async () => {
@@ -68,74 +36,89 @@ const MainComponent = ({ conversationId }: { conversationId: number }) => {
           // console.log(110, data.messages)
           const tmp: Message[] = []
           for (const item of data) {
-            tmp.push({ id: String(item.id), role: item.role, content: item.message })
-          }
+            tmp.push({ id: String(item.id), role: item.role, content: item.message, createdAt: item.createdAt })
 
-          var chatMessages = document.getElementById("chatMessages");
-          // console.log('restart------------>cbat hieght', chatMessages?.scrollHeight)
-          // if (chatMessages)
-          //   chatMessages.scrollTo({ top: 1000 });
-          // chatMessages.scrollTo({ top: chatMessages.scrollHeight });
+          }
           setinitialMessages(tmp)
-          // setinitialMessages([{ id: '1', role: 'user', content: 'hello' }, { id: '2', role: 'assistant', content: 'how i can assit you' }])
         }
       })()
   }, [session])
 
-  const chatEndElementRef = useRef<any>(null);
-  // function scrollToBottom() {
-  //   var chatMessages = document.getElementById("chatMessages");
-  //   if (chatMessages)
-  //     chatMessages.scrollTo({ top: chatMessages.scrollHeight });
-  // }
-
-  // // Call scrollToBottom function when the window is loaded
-  // window.onload = function () {
-  //   // console.log('restart------------>', conversationId)
-  //   scrollToBottom();
-  // };
-
-
-  // useEffect(() => {
-  //   const element = elementRef.current;
-
-  //   if (!element) return;
-
-  //   const observer = new ResizeObserver(entries => {
-  //     for (let entry of entries) {
-  //       const newHeight = entry.contentRect.height;
-  //       console.log('New height:', newHeight);
-  //       // Perform actions based on the new height
-  //     }
-  //   });
-
-  //   observer.observe(element);
-
-  //   return () => {
-  //     observer.disconnect();
-  //   };
-  // }, []);
-
-  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({ onFinish: handelOnFinish, initialMessages: initialMessages });
   useEffect(() => {
-    console.log('message eddite-->')
+    (
+      async () => {
+        const session = await getSession()
+        if (session)
+          setSession(session)
+      }
+    )()
+  }, [])
+
+
+
+  const handelOnFinish = async (message: Message) => {
+    try {
+      if (!session)
+        return
+      const res = await fetch(`http://localhost:3000/api/conversations/${conversationId}`, {
+        headers: {
+          "Authorization": `Bearer ${session.user.accessToken}`
+        }
+      })
+      if (res.ok) {
+        var data = await res.json()
+        data = Array.from(data.messages)
+        const tmp: Message[] = []
+        for (const item of data) {
+          tmp.push({ id: String(item.id), role: item.role, content: item.message, createdAt: item.createdAt })
+        }
+        setMessages(tmp)
+      }
+    } catch (error) {
+
+    }
+  }
+
+  const handelReaction = async (messageId: number, reaction: string) => {
+    try {
+      if (!session)
+        return
+      const res1 = await fetch(`http://localhost:3000/api/messages/${messageId}`, {
+        headers: {
+          "Authorization": `Bearer ${session.user.accessToken}`
+        },
+        method: "PUT",
+        body: JSON.stringify({
+          reaction
+        })
+      })
+    } catch (error) {
+
+    }
+  }
+
+
+  const { messages, setMessages, input, handleInputChange, handleSubmit, isLoading } = useChat({ onFinish: handelOnFinish, initialMessages: initialMessages, body: { conversationId, userid: session?.user.id, accessToken: session?.user.accessToken } });
+
+  useEffect(() => {
     chatEndElementRef.current?.scrollIntoView()
   }, [messages])
+
   return (
-    <div className="w-full h-screen flex flex-col items-cente p-5">
-      <div className=" relative   bg-white h-full rounded-xl pb-[120px] ">
+    <div className="w-full h-screen flex flex-col items-cente p-5 ">
+      <div className=" relative   bg-white h-full rounded-xl pb-[120px] px-2 ">
         <div onChange={() => console.log('change')} className="w-full flex h-full  justify-center overflow-x-hidden hideScroll ">
           <div id='chatMessages' className=" max-w-[1000px] w-full py-24  space-y-16 ">
             {messages.map((message, index) => (
               message.role === 'user' ?
-                <UserMessage key={index} message={message.content} />
+                <UserMessage handelReaction={handelReaction} key={index} message={message} />
                 :
-                <ChaGPTmessage key={index} message={message.content} />
+                <ChaGPTmessage handelReaction={handelReaction} key={index} message={message} />
             ))}
             <div ref={chatEndElementRef}></div>
           </div>
         </div>
-        <div className=" absolute   right-0 bottom-0 w-full   rounded-xl  ">
+        <div className=" absolute   right-0 bottom-0 w-full   rounded-xl    ">
           <div className="px-4 pb-4">
             <div className="w-full bg-slate-200 h-10 rounded-t-xl  border-2 border-b-0 border-slate-200 "></div>
             <form onSubmit={handleSubmit} className="  flex-none p-1  bg-white rounded-b-xl border-2 border-t-0 border-slate-200"

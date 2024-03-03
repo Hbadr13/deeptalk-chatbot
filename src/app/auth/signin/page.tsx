@@ -19,8 +19,10 @@ const SingIn = () => {
     try {
 
       const signinResp = await signIn('credentials', { phoneNumber: phoneNumber, password: password, redirect: false })
-      console.log(signinResp)
-      setmessage('sign in sucseful')
+      if (signinResp?.error) {
+        setmessage(`sign in field`)
+      }
+
     } catch (error) {
       setmessage('sign in field')
 
@@ -72,6 +74,7 @@ const SingIn = () => {
             />
             <div className="absolute -top-[20px] left-2 bg-white p-1"></div>
           </div>
+          <div className=" text-lg text-red-500 font-medium max-w-[300px">{message == 'sign in field' ? 'invalid phone\n number or password ' : ''}</div>
           <div className="">
             <button className=" bg-[#367AFF] py-4 rounded-xl text-center text-[#ffffff] font-semibold text-2xl hover:bg-blue-400 duration-300  w-full">Sign in</button>
           </div>

@@ -1,21 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { getSession, useSession } from 'next-auth/react'
-import Navbar from './navbar'
+import { getSession } from 'next-auth/react'
 import ChatHistory from './chatHistory'
-import Favorite from './favorite'
-import Saved from './saved'
 import { Session } from 'next-auth'
 
 
-export interface SidebarStatusProps {
-    option: string
-    idOfSelectedConv: number,
-    setIdOfSelectedConv: (idOfSelectedConv: number) => void
-}
 
 
-const SidebarStatus = ({ idOfSelectedConv, setIdOfSelectedConv, option }: SidebarStatusProps) => {
-    // const session = useSession()
+const SidebarStatus = () => {
     const [session, setSession] = useState<Session | null>()
     useEffect(() => {
         (
@@ -33,13 +24,7 @@ const SidebarStatus = ({ idOfSelectedConv, setIdOfSelectedConv, option }: Sideba
             </div>
         )
     return (
-        option == 'chat' ?
-            < ChatHistory idOfSelectedConv={idOfSelectedConv} setIdOfSelectedConv={setIdOfSelectedConv} />
-            : option == 'saved_Q' ?
-                <Saved />
-                : option == 'saved_R' ?
-                    <Saved />
-                    : <Favorite />
+            < ChatHistory />
     )
 
 
