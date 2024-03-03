@@ -8,6 +8,7 @@ import LogOut from "@/components/navbar";
 import Navbar from "@/components/navbar";
 import Sidebar from "@/components/sidebar";
 import SidebarStatus from "@/components/sidebarStatus";
+import { useState } from "react";
 
 const inter = Inter({ subsets: ['greek'] });
 
@@ -21,18 +22,18 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
+  const [idOfSelectedConv, setIdOfSelectedConv] = useState(0)
+  const [option, setOption] = useState('chat')
   return (
     <html lang="en" >
       <body className={inter.className}>
         <Provider >
-          {/* <div className="flex  "> */}
-          {/* <Navbar />
-            <Sidebar />
-            <SidebarStatus /> */}
-          <Navbar />
-          {children}
-          {/* </div> */}
+          <div className="flex bg-[#0f1e46]  ">
+            <Navbar />
+            <Sidebar option={option} setOption={setOption} />
+            <SidebarStatus option={option} idOfSelectedConv={idOfSelectedConv} setIdOfSelectedConv={setIdOfSelectedConv} />
+            {children}
+          </div>
         </Provider>
       </body>
     </html>

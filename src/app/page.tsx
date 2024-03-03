@@ -7,10 +7,11 @@ export default function Home() {
   const [idOfSelectedConv, setIdOfSelectedConv] = useState(0)
   const [option, setOption] = useState('chat')
   return (
-    <div className="flex bg-[#0f1e46]  ">
-      <Sidebar option={option} setOption={setOption} />
-      <SidebarStatus option={option} idOfSelectedConv={idOfSelectedConv} setIdOfSelectedConv={setIdOfSelectedConv} />
-      <Main idOfSelectedConv={idOfSelectedConv} />
+    <div className="flex  ">
+      hello
+      {/* <Sidebar option={option} setOption={setOption} /> */}
+      {/* <SidebarStatus option={option} idOfSelectedConv={idOfSelectedConv} setIdOfSelectedConv={setIdOfSelectedConv} /> */}
+      {/* <Main idOfSelectedConv={idOfSelectedConv} /> */}
     </div >
   );
 }

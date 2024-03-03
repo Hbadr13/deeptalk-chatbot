@@ -22,9 +22,9 @@ const Sidebar = ({ option, setOption }: SidebarProps) => {
             </div>
         )
     return (
-        <div className='relative p-3 flex flex-col space-y-6 w-[25%]    h-screen   text-lg font-medium'>
+        <div className='relative p-3 flex flex-col space-y-6 w-[25%]    h-screen   text-lg font-medium  '>
 
-            <div className="relative p-10 text-2xl font-extrabold  text-white flex items-center space-x-3">
+            <div className="relative p-10 text-2xl font-extrabold  text-white flex items-center space-x-3 ">
                 <div className=" relative w-10 h-10 ">
                     <Image src={'/deepleaf_logo.jpg'} alt='deepleaf' fill objectFit='cover' className='' />
                 </div>

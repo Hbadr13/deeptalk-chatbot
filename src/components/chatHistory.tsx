@@ -7,6 +7,7 @@ import { Conversation } from '@prisma/client'
 import { getTheTime } from '@/lib/time'
 import Image from 'next/image'
 import Navbar from './navbar'
+import { useRouter } from 'next/navigation'
 export interface ChatHistoryProps {
     idOfSelectedConv: number,
     setIdOfSelectedConv: (idOfSelectedConv: number) => void
@@ -26,7 +27,7 @@ const ChatHistory = ({ idOfSelectedConv, setIdOfSelectedConv }: ChatHistoryProps
 
     const [conversations, setConversations] = useState<Conversation[]>([])
     const session = useSession()
-
+    const router = useRouter()
     useEffect(() => {
         (
             async () => {
@@ -95,7 +96,7 @@ const ChatHistory = ({ idOfSelectedConv, setIdOfSelectedConv }: ChatHistoryProps
                     (
                         <div key={index} className={` relative  font-extrabold  text-[#212327]  flex flex-col space-y-6 py-3 px-10`}>
                             <div
-                                onClick={() => setIdOfSelectedConv(conversation.id)}
+                                onClick={() => (setIdOfSelectedConv(conversation.id), router.push(`/conv/${conversation.id}`))}
                                 className={`w-full  cursor-pointer flex justify-between rounded-lg  p-2 border-b-2 ${conversation.id == idOfSelectedConv ? 'bg-slate-300' : ''}`}>
                                 <div className="">
                                     {
