@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image'
 import { Message } from 'ai'
 import { getTheTime } from '@/lib/time'
@@ -15,7 +15,11 @@ const ChaGPTmessage = ({ message, handelReaction }: ChaGPTmessageProps) => {
     { name: 'Regenereted Response', icon: '/repeat.png' },
     { name: 'Save Response', icon: '/save.png' },
   ]
+  const [copied, setCopied] = useState(false);
 
+  const copyTextToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text)
+  };
   return (
     <div className="whitespace-pre-wrap flex flex-col justify-start ">
       <div className="max-w-[800px] bg-[#D5DAE7] p-6 rounded-lg space-y-4 relative">
@@ -49,7 +53,7 @@ const ChaGPTmessage = ({ message, handelReaction }: ChaGPTmessageProps) => {
           {
             options.map((option, index) => (
               <button
-                onClick={option.name == 'Save Response' ? () => handelReaction(Number(message.id), 'register_rs') : undefined}
+                onClick={option.name == 'Save Response' ? () => handelReaction(Number(message.id), 'register_rs') : option.name == 'Copy Text' ? () => copyTextToClipboard(message.content) : undefined}
                 key={index} className="flex p-3 items-center text-center border-[1px] border-slate-200 rounded-xl space-x-2  bg-white hover:bg-slate-100">
                 <Image src={option.icon} width={20} height={20} alt='like'></Image>
                 <div className=''>

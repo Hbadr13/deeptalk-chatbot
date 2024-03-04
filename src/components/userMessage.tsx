@@ -15,6 +15,9 @@ const UserMessage = ({ message, handelReaction }: UserMessageProps) => {
     { name: 'Save Question', icon: '/save.png' },
   ]
 
+  const copyTextToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text)
+  };
   return (
     <div className="whitespace-pre-wrap  flex justify-end  relative">
       <div className="max-w-[800px] min-w-[500px] bg-[#fce8e7] p-6 rounded-lg space-y-4 " >
@@ -38,7 +41,7 @@ const UserMessage = ({ message, handelReaction }: UserMessageProps) => {
           {
             options.map((option, index) => (
               <button
-                onClick={option.name == 'Save Question' ? () => handelReaction(Number(message.id), 'register_qs') : undefined}
+                onClick={option.name == 'Save Question' ? () => handelReaction(Number(message.id), 'register_qs') : option.name == 'Copy Text' ? () => copyTextToClipboard(message.content) : undefined}
                 key={index} className="flex p-3 items-center text-center border-[1px] border-slate-200 rounded-xl space-x-2  bg-white hover:bg-slate-100">
                 <Image src={option.icon} width={20} height={20} alt='like'></Image>
                 <div className=''>
