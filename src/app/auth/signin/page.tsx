@@ -30,15 +30,11 @@ const SingIn = () => {
 
   };
   useEffect(() => {
-    console.log('data:', data)
-    console.log('--->', status)
     if (status === 'authenticated') {
       router.push('/');
     }
   }, [status]);
   useEffect(() => {
-    // const 
-    console.log('------>', /^\d+$/.test(phoneNumber))
     if (phoneNumber[0] != '+')
       setError(true)
     else if (phoneNumber.length != 13)
@@ -47,7 +43,6 @@ const SingIn = () => {
       setError(true)
     else
       setError(false)
-    console.log(phoneNumber.slice(1, phoneNumber.length))
   }, [phoneNumber])
   return (
     <div className='w-full   text-b flex flex-col items-center pb-20'>

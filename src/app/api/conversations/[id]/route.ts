@@ -18,10 +18,15 @@ export async function GET(request: Request, contax: any) {
 
         const messages = await prisma.message.findMany({
             where: {
+
                 convId: conversationId,
+            },
+            orderBy: {
+                createdAt: 'asc'
             }
         })
         // const response = NextResponse.json({ messages })
+        console.log(messages)
         return new Response(JSON.stringify({ messages }), { status: 201 })
     } catch (error) {
         return new Response(JSON.stringify(null), { status: 500 })

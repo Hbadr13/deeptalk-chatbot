@@ -147,7 +147,7 @@ const ChatHistory = () => {
                                     <div className="">
                                         {getTheTime(conversation.createdAt)}
                                     </div>
-                                    <button onClick={() => console.log('delete')} className=" bg-white rounded-lg p-1">
+                                    <button className=" bg-white rounded-lg p-1">
                                         <Image height={30} width={30} src={'/delete.svg'} alt='delete' />
                                     </button>
                                 </div>

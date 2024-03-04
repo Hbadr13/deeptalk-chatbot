@@ -21,12 +21,6 @@ export async function POST(req: Request) {
     );
     const stream = OpenAIStream(response, {
         onCompletion: async (completion: string) => {
-
-            console.log('conversationId', conversationId)
-            console.log('lastmsg', messages[messages.length - 1].content,)
-            console.log('response', completion)
-            console.log('userid', userid)
-
             await fetch(`http://localhost:3000/api/conversations/${conversationId}`, {
                 headers: {
                     "Authorization": `Bearer ${accessToken}`

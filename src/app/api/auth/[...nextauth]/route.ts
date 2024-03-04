@@ -48,7 +48,6 @@ export const authOptions: AuthOptions = {
                     if (!secretKay)
                         return null;
                     const accessToken = jwt.sign(currentUser, secretKay, { expiresIn: '1d' });
-                    console.log('accessToken->', accessToken)
                     return {
                         ...currentUser,
                         accessToken
@@ -96,7 +95,6 @@ export const authOptions: AuthOptions = {
             return session
         },
         async jwt({ token, user, account }) {
-            console.log('account', user)
             if (user) {
                 token.user = user as unknown as UserInfo;
             }

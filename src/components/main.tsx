@@ -33,7 +33,6 @@ const MainComponent = ({ conversationId }: { conversationId: number }) => {
         if (res.ok) {
           var data = await res.json()
           data = Array.from(data.messages)
-          // console.log(110, data.messages)
           const tmp: Message[] = []
           for (const item of data) {
             tmp.push({ id: String(item.id), role: item.role, content: item.message, createdAt: item.createdAt })
@@ -101,13 +100,13 @@ const MainComponent = ({ conversationId }: { conversationId: number }) => {
   const { messages, setMessages, input, handleInputChange, handleSubmit, isLoading } = useChat({ onFinish: handelOnFinish, initialMessages: initialMessages, body: { conversationId, userid: session?.user.id, accessToken: session?.user.accessToken } });
 
   useEffect(() => {
-    chatEndElementRef.current?.scrollIntoView()
+    chatEndElementRef.current?.scrollIntoView() 
   }, [messages])
 
   return (
     <div className="w-full h-screen flex flex-col items-cente p-5 ">
       <div className=" relative   bg-white h-full rounded-xl pb-[120px] px-2 ">
-        <div onChange={() => console.log('change')} className="w-full flex h-full  justify-center overflow-x-hidden hideScroll ">
+        <div className="w-full flex h-full  justify-center overflow-x-hidden hideScroll ">
           <div id='chatMessages' className=" max-w-[1000px] w-full py-24  space-y-16 ">
             {messages.map((message, index) => (
               message.role === 'user' ?

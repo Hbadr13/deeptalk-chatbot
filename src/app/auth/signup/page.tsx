@@ -1,39 +1,3 @@
-// 'use client'
-// import { signUp } from '@/app/actions/user/singUp'
-// import Link from 'next/link'
-// import React, { useState } from 'react'
-
-// const SinUp = () => {
-//   const [email, setEmail] = useState('')
-//   const [password, setPassword] = useState('')
-
-//   const handleSubmit = async (e: any) => {
-//     e.preventDefault(); // Prevent default form submission
-//     const user = await signUp({ email, password })
-//     console.log(user)
-//     // Process your form data here, e.g., submit it to an API
-//   };
-//   return (
-//     <div className='w-full bg-slate-400 text-b flex flex-col items-center'>
-//       <h1 className='text-3xl'>sign up</h1>
-//       <form onSubmit={handleSubmit} className='flex flex-col '>
-//         <div className="flex space-x-3 p-4">
-//           <div>email</div>
-//           <input className='border-2 rounded-xl' type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
-//         </div>
-//         <div className="flex space-x-3 p-4">
-//           <div>Password</div>
-//           <input className='border-2 rounded-xl' type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-//         </div>
-//         <div className="flex justify-around">
-//           <button className='bg-blue-300 rounded-2xl px-5 py-2' type="submit">Submit</button>
-//           <Link href={'/auth/signin'} className='bg-blue-300 rounded-2xl px-5 py-2' type="submit">signIn</Link>
-//         </div>      </form>
-
-//     </div >
-//   )
-// }
-
 'use client'
 import {
   EnvelopeIcon,
@@ -96,13 +60,6 @@ const SingUp = () => {
     }
     else
       setError((opj) => ({ ...opj, password: false }))
-
-    console.log('phone', phoneNumber)
-    console.log('username', username)
-    console.log('data', birthdate)
-    console.log('email', email)
-    console.log('password', password)
-    console.log('----------------------\n')
     const status = await signUp({ email, phoneNumber, username, birthdate, password })
     if (status == 'succes') {
       router.refresh()

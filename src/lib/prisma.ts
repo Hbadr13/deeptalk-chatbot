@@ -13,7 +13,6 @@ import { PrismaClient } from '@prisma/client'
 //  connections as each PrismaClient instance holds its own connection pool.
 
 const prismaClientSingleton = () => {
-    console.log('new prisma instance.')
     return new PrismaClient()
 }
 

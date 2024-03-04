@@ -27,7 +27,6 @@ export default function RootLayout({
   useEffect(() => {
     navigations.map((itm: any) => {
       if (itm.link == pathname) {
-        console.log('pathname', itm.label)
         setOption(itm.label)
         return
       }
