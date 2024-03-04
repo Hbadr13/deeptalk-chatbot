@@ -25,7 +25,6 @@ export async function GET(request: Request, contax: any) {
                 createdAt: 'asc'
             }
         })
-        // const response = NextResponse.json({ messages })
         console.log(messages)
         return new Response(JSON.stringify({ messages }), { status: 201 })
     } catch (error) {
