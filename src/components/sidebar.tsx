@@ -34,10 +34,12 @@ const Sidebar = ({ option, setOption }: SidebarProps) => {
 
             <div className="relative p-10 text-2xl font-extrabold  text-white flex items-center space-x-3 ">
                 <div className=" relative w-10 h-10 ">
-                    <Image src={'/deepleaf_logo.jpg'} alt='deepleaf' fill objectFit='cover' className='' />
+                    <Image src={'/deeptalk.jpg'} alt='deepleaf' fill objectFit='cover' className='' />
+                    {/* <Image src={'/deepleaf_logo.jpg'} alt='deepleaf' fill objectFit='cover' className='' /> */}
                 </div>
                 <div className="">
-                    DeepLeaf
+                    {/* DeepChat */}
+                    DeepTalk
                 </div>
                 <div className="absolute w-full h-[1px] bg-[#bdbcbc] opacity-25 -left-2 bottom-5"></div>
             </div>
